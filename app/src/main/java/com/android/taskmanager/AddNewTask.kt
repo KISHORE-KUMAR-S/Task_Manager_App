@@ -12,6 +12,8 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -48,6 +50,12 @@ class AddNewTask : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            insets.isVisible(WindowInsetsCompat.Type.ime())
+            insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            insets
+        }
 
         viewModel = ViewModelProvider(this)[AddNewTaskViewModel::class.java]
 
