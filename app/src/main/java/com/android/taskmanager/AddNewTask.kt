@@ -12,10 +12,18 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.android.taskmanager.models.TodoModel
 import com.android.taskmanager.utils.DatabaseHandler
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+
+class AddNewTaskViewModel : ViewModel() {
+    var isUpdate: Boolean = false
+    var taskText: String = ""
+}
 
 class AddNewTask : BottomSheetDialogFragment() {
 
@@ -30,18 +38,7 @@ class AddNewTask : BottomSheetDialogFragment() {
     private lateinit var newTaskText: EditText
     private lateinit var newTaskSaveButton: Button
     private lateinit var db: DatabaseHandler
-
-    private var isInstanceStateSaved = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.DialogStyle)
-
-        // Check if savedInstanceState is not null, indicating that the fragment is being recreated
-        if (savedInstanceState != null) {
-            isInstanceStateSaved = true
-        }
-    }
+    private lateinit var viewModel: AddNewTaskViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.new_task, container, false)
@@ -52,18 +49,15 @@ class AddNewTask : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(this)[AddNewTaskViewModel::class.java]
+
         newTaskText = view.findViewById(R.id.new_task_text)
         newTaskSaveButton = view.findViewById(R.id.new_task_button)
 
-        var isUpdate = false
+        if (viewModel.isUpdate) {
+            newTaskText.setText(viewModel.taskText)
 
-        val bundle = arguments
-        if (bundle != null) {
-            isUpdate = true
-            val task = bundle.getString("task")
-            newTaskText.setText(task)
-
-            if ((task?.length ?: 0) > 0) {
+            if (viewModel.taskText.isNotEmpty()) {
                 context?.let {
                     newTaskSaveButton.setTextColor(ContextCompat.getColor(it, R.color.colorPrimaryDark))
                 }
@@ -89,12 +83,11 @@ class AddNewTask : BottomSheetDialogFragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        val finalIsUpdate = isUpdate
         newTaskSaveButton.setOnClickListener {
             val text = newTaskText.text.toString()
             if(text.isNotEmpty()) {
-                if (finalIsUpdate) {
-                    bundle?.getInt("id")?.let { it1 -> db.updateTask(it1, text) }
+                if (viewModel.isUpdate) {
+                    arguments?.getInt("id")?.let { id -> db.updateTask(id, text) }
                 } else {
                     val task = TodoModel().apply {
                         task = text
@@ -107,7 +100,17 @@ class AddNewTask : BottomSheetDialogFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Check if another instance of the dialog is already added, if so, dismiss it
+        val existingDialog = parentFragmentManager.findFragmentByTag(tag)
+        if (existingDialog != null && existingDialog != this) {
+            (existingDialog as DialogFragment).dismiss()
+        }
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
         val activity = requireActivity()
         if (activity is DialogCloseListener) {
             activity.handleDialogClose(dialog)
