@@ -1,1 +1,1 @@
-Task Manager - a CRUD application made using RecyclerView and CardView, which utilizes an SQLite Database to store tasks and ItemTouchHelper to enable swipe options for editing and deleting tasks.
+# Task Manager - a CRUD application made using RecyclerView and CardView, which utilizes an SQLite Database to store tasks and ItemTouchHelper to enable swipe options for editing and deleting tasks.
