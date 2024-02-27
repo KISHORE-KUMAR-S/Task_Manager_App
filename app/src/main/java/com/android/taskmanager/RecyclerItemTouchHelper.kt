@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.android.taskmanager.adapter.TodoAdapter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class RecyclerItemTouchHelper(
     private val context: Context,
@@ -29,7 +30,7 @@ class RecyclerItemTouchHelper(
     override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
         if (direction == LEFT) {
-            AlertDialog.Builder(context)
+            MaterialAlertDialogBuilder(context)
                 .setTitle("Delete Task")
                 .setMessage("Are you sure you want to delete this Task?")
                 .setPositiveButton("Confirm") { _, _ ->
@@ -38,8 +39,8 @@ class RecyclerItemTouchHelper(
                 .setNegativeButton(android.R.string.cancel) { _, _ ->
                     adapter.notifyItemChanged(viewHolder.adapterPosition)
                 }
-                .create()
                 .show()
+
         } else {
             adapter.editItem(position)
         }
