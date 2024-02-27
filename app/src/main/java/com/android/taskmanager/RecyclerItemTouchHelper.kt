@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +31,7 @@ class RecyclerItemTouchHelper(
         if (direction == LEFT) {
             MaterialAlertDialogBuilder(context)
                 .setTitle("Delete Task")
-                .setMessage("Are you sure you want to delete this Task?")
+                .setMessage("Are you sure you want to delete this task?")
                 .setPositiveButton("Confirm") { _, _ ->
                     adapter.deleteItem(position)
                 }
