@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Widget.MaterialComponents.CardView"
     app:cardElevation="4dp"
     app:cardCornerRadius="8dp"
     android:layout_marginHorizontal="16dp"

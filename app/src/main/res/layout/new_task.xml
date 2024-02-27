@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:theme="@style/Base.Theme.TaskManager">
 
     <androidx.appcompat.widget.AppCompatEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:id="@+id/new_task_text"
         android:background="@null"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -14,6 +16,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/new_task_button"
         android:layout_below="@+id/new_task_text"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
